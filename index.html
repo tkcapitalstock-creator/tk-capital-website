@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TK Capital｜日本株マーケットリサーチ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f4f2ec;
+    --paper: #ffffff;
+    --navy: #14213d;
+    --navy-soft: #1c2c4c;
+    --green: #3b6d11;
+    --green-soft: #5a9c2f;
+    --green-bg: #eaf3de;
+    --blue: #185fa5;
+    --blue-soft: #378add;
+    --blue-bg: #e6f1fb;
+    --red: #c0392b;
+    --red-bg: #fbe4e1;
+    --ink: #1a1a1a;
+    --muted: #78766a;
+    --line: #e3dfd2;
+    --display: "Shippori Mincho", serif;
+    --body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+    --mono: "Roboto Mono", monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: var(--body);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- Ticker ---------- */
+  .ticker-bar {
+    background: var(--navy);
+    color: #dfe6f2;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .ticker-track {
+    display: inline-block;
+    padding: 9px 0;
+    animation: ticker 42s linear infinite;
+  }
+  .ticker-track span { padding: 0 26px; }
+  .t-up { color: #8fd19e; }
+  .t-down { color: #f2a396; }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; }
+  }
+
+  /* ---------- News ticker ---------- */
+  .news-bar {
+    background: #0e1830;
+    color: #cfd6e4;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 12.5px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+  }
+  .news-label {
+    flex: 0 0 auto;
+    background: var(--green-soft);
+    color: #0e1830;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 9px 14px;
+  }
+  .news-track-wrap { overflow: hidden; flex: 1 1 auto; }
+  .news-track {
+    display: inline-block;
+    padding: 9px 0;
+    animation: newsticker 55s linear infinite;
+  }
+  .news-track a {
+    padding: 0 30px;
+    text-decoration: none;
+    color: #cfd6e4;
+    border-right: 1px solid rgba(255,255,255,0.12);
+  }
+  .news-track a:hover { color: #fff; text-decoration: underline; }
+  .news-track .src {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: #8ea0c4;
+    margin-right: 8px;
+  }
+  @keyframes newsticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .news-track { animation: none; }
+  }
+
+  /* ---------- Header ---------- */
+  header.site {
+    background: var(--cream);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(6px);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--navy);
+    letter-spacing: 0.02em;
+  }
+  .brand small {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 30px;
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+  .nav-links a { text-decoration: none; color: var(--navy-soft); position: relative; }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0; height: 1.5px;
+    background: var(--green-soft);
+    transition: width 0.25s ease;
+  }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    font-size: 12.5px;
+    font-weight: 700;
+    background: var(--navy);
+    color: #fff;
+    padding: 9px 18px;
+    border-radius: 20px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  @media (max-width: 720px) {
+    .nav-links { display: none; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 90px 0 70px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero .container {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 56px;
+    align-items: center;
+  }
+  @media (max-width: 860px) {
+    .hero .container { grid-template-columns: 1fr; }
+    .hero { padding: 56px 0 40px; }
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--green);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 22px; height: 1.5px;
+    background: var(--green-soft);
+    display: inline-block;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(32px, 4.6vw, 52px);
+    line-height: 1.45;
+    color: var(--navy);
+    margin: 0 0 26px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--green);
+    position: relative;
+  }
+  .hero p.lead {
+    font-size: 15.5px;
+    color: #4a4940;
+    max-width: 46ch;
+    margin-bottom: 34px;
+  }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary, .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 26px;
+    border-radius: 26px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--green); color: #fff; }
+  .btn-primary:hover { background: var(--green-soft); }
+  .btn-secondary { border: 1px solid var(--line); color: var(--navy); background: var(--paper); }
+  .btn-secondary:hover { border-color: var(--navy); }
+
+  /* Hero card mock — mirrors the actual report design */
+  .hero-visual { position: relative; }
+  .mini-report {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 26px 24px;
+    box-shadow: 0 18px 40px rgba(20,33,61,0.14);
+    max-width: 340px;
+    margin-left: auto;
+    transform: rotate(2deg);
+    border: 1px solid var(--line);
+  }
+  .mini-report .kicker {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .mini-report h3 {
+    font-family: var(--display);
+    font-size: 17px;
+    margin: 0 0 3px;
+    color: var(--ink);
+  }
+  .mini-report .date {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .mini-report .row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    padding: 7px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .pill {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .pill.up { background: var(--green-bg); color: var(--green); }
+  .pill.down { background: var(--red-bg); color: var(--red); }
+  .stamp {
+    position: absolute;
+    top: -14px; left: -14px;
+    background: var(--navy);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 7px 12px;
+    border-radius: 8px;
+    transform: rotate(-4deg);
+    box-shadow: 0 6px 16px rgba(20,33,61,0.25);
+  }
+
+  /* ---------- Section shared ---------- */
+  section { padding: 76px 0; }
+  .section-head {
+    max-width: 620px;
+    margin-bottom: 46px;
+  }
+  .section-head h2 {
+    font-family: var(--display);
+    font-size: clamp(24px, 3vw, 32px);
+    color: var(--navy);
+    margin: 0 0 14px;
+    line-height: 1.5;
+  }
+  .section-head p {
+    font-size: 14.5px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* ---------- Deliverables (report timings) ---------- */
+  .deliverables {
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .cards-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 860px) { .cards-3 { grid-template-columns: 1fr; } }
+  .dcard {
+    border-radius: 14px;
+    padding: 26px 24px;
+    border: 1px solid var(--line);
+    background: var(--cream);
+  }
+  .dcard .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  .dcard.blue .tag { background: var(--blue-bg); color: var(--blue); }
+  .dcard.green .tag { background: var(--green-bg); color: var(--green); }
+  .dcard.navy .tag { background: #e6e9f0; color: var(--navy); }
+  .dcard h3 {
+    font-family: var(--display);
+    font-size: 19px;
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+  .dcard p {
+    font-size: 13.5px;
+    color: #55534a;
+    margin: 0;
+  }
+  .dcard .time {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+  }
+
+  /* ---------- About / philosophy ---------- */
+  .about .container {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 60px;
+    align-items: start;
+  }
+  @media (max-width: 860px) { .about .container { grid-template-columns: 1fr; gap: 30px; } }
+  .about-figure {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--navy);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .about-figure .n {
+    font-family: var(--display);
+    font-size: 30px;
+    color: var(--green);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .about-figure .row { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .about-figure .row:last-child { border-bottom: none; }
+  .about-body p { font-size: 15px; color: #3d3c34; margin: 0 0 18px; }
+  .about-body p:last-child { margin-bottom: 0; }
+
+  /* ---------- Reports strip (weekly / picks) ---------- */
+  .extra {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 720px) { .extra { grid-template-columns: 1fr; } }
+  .xcard {
+    background: var(--navy);
+    color: #f1f0ea;
+    border-radius: 16px;
+    padding: 30px 28px;
+  }
+  .xcard.alt { background: var(--paper); color: var(--ink); border: 1px solid var(--line); }
+  .xcard .eyebrow2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #9db2d6;
+    margin-bottom: 12px;
+  }
+  .xcard.alt .eyebrow2 { color: var(--green); }
+  .xcard h3 {
+    font-family: var(--display);
+    font-size: 20px;
+    margin: 0 0 12px;
+  }
+  .xcard p { font-size: 13.5px; opacity: 0.9; margin: 0; }
+  .xcard.alt p { opacity: 1; color: #55534a; }
+
+  /* ---------- CTA / contact ---------- */
+  .cta-section {
+    background: var(--navy);
+    color: #f1f0ea;
+    border-radius: 22px;
+    margin: 0 24px;
+    padding: 60px 44px;
+    text-align: center;
+  }
+  .cta-section h2 {
+    font-family: var(--display);
+    font-size: clamp(22px, 3vw, 30px);
+    margin: 0 0 16px;
+  }
+  .cta-section p {
+    font-size: 14.5px;
+    color: #cfd6e4;
+    max-width: 50ch;
+    margin: 0 auto 30px;
+  }
+  .cta-section .btn-primary { background: var(--green-soft); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    padding: 50px 0 34px;
+  }
+  .footer-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 20px;
+  }
+  .footer-brand {
+    font-family: var(--display);
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 16px;
+  }
+  .footer-links { display: flex; gap: 22px; font-size: 13px; color: var(--muted); }
+  .footer-links a { text-decoration: none; }
+  .footer-links a:hover { color: var(--navy); }
+  .disclaimer {
+    font-size: 11px;
+    color: #9a9888;
+    line-height: 1.9;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="ticker-bar">
+    <div class="ticker-track" id="tickerTrack">
+      <span>ドル円 145.32</span>
+      <span>NYダウ <span class="t-up">▲0.38%</span></span>
+      <span>SOX指数 <span class="t-up">▲1.05%</span></span>
+      <span>米10年債利回り 4.28%</span>
+      <span>NY金先物 <span class="t-up">▲0.6%</span></span>
+      <span>WTI原油先物 <span class="t-down">▼0.9%</span></span>
+      <span>ドル円 145.32</span>
+      <span>NYダウ <span class="t-up">▲0.38%</span></span>
+      <span>SOX指数 <span class="t-up">▲1.05%</span></span>
+      <span>米10年債利回り 4.28%</span>
+      <span>NY金先物 <span class="t-up">▲0.6%</span></span>
+      <span>WTI原油先物 <span class="t-down">▼0.9%</span></span>
+    </div>
+  </div>
+
+  <div class="news-bar">
+    <div class="news-label">MARKET NEWS</div>
+    <div class="news-track-wrap">
+      <div class="news-track" id="newsTrack">
+        <a href="#" target="_blank" rel="noopener"><span class="src">日本経済新聞</span>日銀、次回会合での追加利上げ観測が浮上</a>
+        <a href="#" target="_blank" rel="noopener"><span class="src">Bloomberg</span>半導体関連株、AI需要拡大観測で上昇</a>
+        <a href="#" target="_blank" rel="noopener"><span class="src">Reuters</span>米長期金利、経済指標受け上昇</a>
+        <a href="#" target="_blank" rel="noopener"><span class="src">日本経済新聞</span>円相場、日米金利差を意識した展開に</a>
+        <a href="#" target="_blank" rel="noopener"><span class="src">Bloomberg</span>原油先物、需給緩和観測で軟調</a>
+        <a href="#" target="_blank" rel="noopener"><span class="src">日本経済新聞</span>日銀、次回会合での追加利上げ観測が浮上</a>
+        <a href="#" target="_blank" rel="noopener"><span class="src">Bloomberg</span>半導体関連株、AI需要拡大観測で上昇</a>
+        <a href="#" target="_blank" rel="noopener"><span class="src">Reuters</span>米長期金利、経済指標受け上昇</a>
+        <a href="#" target="_blank" rel="noopener"><span class="src">日本経済新聞</span>円相場、日米金利差を意識した展開に</a>
+        <a href="#" target="_blank" rel="noopener"><span class="src">Bloomberg</span>原油先物、需給緩和観測で軟調</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site">
+    <div class="container nav">
+      <div class="brand">TK Capital <small>MARKET&nbsp;RESEARCH</small></div>
+      <nav class="nav-links">
+        <a href="#deliverables">配信レポート</a>
+        <a href="#about">私たちについて</a>
+        <a href="#reports">週次・銘柄レポート</a>
+        <a href="#contact">お問い合わせ</a>
+      </nav>
+      <a class="nav-cta" href="#contact">配信について相談する</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-copy">
+        <div class="eyebrow">JAPANESE EQUITY MARKET RESEARCH</div>
+        <h1>相場が動く理由を、<br><em>その日のうちに</em>言葉にする。</h1>
+        <p class="lead">
+          TK Capitalは日本株市場に特化したマーケットリサーチチームです。寄り付き前・前引け・大引けの3つのタイミングで、値動きの背景をコラム形式で整理し、日々の投資判断に使える形でお届けしています。
+        </p>
+        <div class="hero-ctas">
+          <a class="btn-primary" href="moshikomi.html">配信レポートを申し込む</a>
+          <a class="btn-secondary" href="#deliverables">配信レポートを見る</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="stamp">本日 08:45 配信</div>
+        <div class="mini-report">
+          <div class="kicker">💹 TK CAPITAL MARKET RESEARCH</div>
+          <h3>半導体関連が牽引、<br>プライムは続伸スタート</h3>
+          <div class="date">8月24日　寄り付き前コラム</div>
+          <div class="row"><span>日経平均（前日終値）</span><span class="pill up">▲0.6%</span></div>
+          <div class="row"><span>SOX指数</span><span class="pill up">▲1.9%</span></div>
+          <div class="row"><span>ドル円</span><span class="pill down">145円台</span></div>
+          <div class="row" style="border-bottom:none;"><span>米10年債利回り</span><span class="pill up">4.28%</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="deliverables" id="deliverables">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>ひとつの取引時間を、<br>3回に分けて読み解く</h2>
+        <p>相場は開場前・午前・引け後で表情を変えます。TK Capitalはそれぞれの時間帯に合わせて、その時点で必要な情報だけを整理してお届けします。</p>
+      </div>
+      <div class="cards-3">
+        <div class="dcard blue reveal">
+          <span class="tag">PRE-MARKET</span>
+          <h3>寄り付き前コラム</h3>
+          <p>前日の米国市場と為替・金利動向をふまえ、東京市場の始値イメージと注目材料株を整理します。</p>
+          <div class="time">配信目安：8:00〜8:45</div>
+        </div>
+        <div class="dcard green reveal">
+          <span class="tag">MID-SESSION</span>
+          <h3>前引けコラム</h3>
+          <p>午前の値動きと売買代金、値上がり・値下がり銘柄の傾向から、午後相場の見立てをまとめます。</p>
+          <div class="time">配信目安：11:45〜12:30</div>
+        </div>
+        <div class="dcard navy reveal">
+          <span class="tag">CLOSE</span>
+          <h3>大引けコラム</h3>
+          <p>一日の値動きを総括し、騰落レシオや空売り比率などの需給指標もあわせて翌営業日への視点を提示します。</p>
+          <div class="time">配信目安：18:00〜20:00</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-figure reveal">
+        <div class="row"><span class="n">3</span>時間帯に分けた日次レポート配信</div>
+        <div class="row"><span class="n">1</span>本の週次投資レポートで週間の相場観を整理</div>
+        <div class="row"><span class="n">TSE</span>プライム・グロース市場を中心にカバー</div>
+      </div>
+      <div class="about-body reveal">
+        <div class="eyebrow">ABOUT TK CAPITAL</div>
+        <p>
+          TK Capitalは、日本株市場の値動きを需給・ファンダメンタルズ・マクロの3つの視点から読み解き、レポートという形に落とし込むマーケットリサーチチームです。相場の「結果」だけでなく、「なぜそう動いたのか」を伝えることを重視しています。
+        </p>
+        <p>
+          日々の指標データと市場コメントをもとに、機関投資家や個人投資家の投資判断に役立つ情報を、専門用語に偏りすぎない読みやすい言葉で発信しています。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="reports">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>日次コラムに加えて</h2>
+        <p>その日の値動きだけでなく、週単位・銘柄単位でも投資判断に役立つ情報をお届けしています。</p>
+      </div>
+      <div class="extra">
+        <div class="xcard reveal">
+          <div class="eyebrow2">WEEKLY REPORT</div>
+          <h3>週次投資レポート</h3>
+          <p>1週間の相場を振り返り、翌週の注目イベントやセクター動向を整理してお届けします。週初の投資戦略づくりにお使いいただけます。</p>
+        </div>
+        <div class="xcard alt reveal">
+          <div class="eyebrow2">STOCK PICKS</div>
+          <h3>銘柄レポート</h3>
+          <p>決算や材料をふまえた個別銘柄の分析コラムです。業績動向や需給状況とあわせて、注目ポイントを整理して解説します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="cta-section reveal">
+        <h2>レポート配信について、お気軽にご相談ください</h2>
+        <p>投資初心者の方から、日々のニュースをチェックする時間が取りにくい方まで、無理なく続けられるボリュームで配信しています。まずはお気軽にお申し込みください。</p>
+        <a class="btn-primary" href="moshikomi.html">会員申し込みはこちら</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">TK Capital</div>
+        <div class="footer-links">
+          <a href="#deliverables">配信レポート</a>
+          <a href="#about">私たちについて</a>
+          <a href="#reports">週次・銘柄レポート</a>
+          <a href="#contact">お問い合わせ</a>
+        </div>
+      </div>
+      <div class="disclaimer">
+        本サイトで提供する情報は情報提供を目的としたものであり、投資勧誘を目的としたものではありません。個別の投資判断はご自身の責任でお願いいたします。記載内容の正確性については万全を期しておりますが、その内容を保証するものではありません。<br>
+        © TK Capital Market Research
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /*
+      データ連携について（実装時にこの2つのJSONを差し替える想定）
+
+      1) /data/ticker.json … 相場ティッカー用（自動更新できる項目のみ）
+         例:
+         {
+           "updated_at": "2026-08-24T08:45:00+09:00",
+           "items": [
+             { "label": "ドル円", "value": "145.32", "direction": null },
+             { "label": "NYダウ", "value": "▲0.38%", "direction": "up" },
+             { "label": "SOX指数", "value": "▲1.05%", "direction": "up" },
+             { "label": "米10年債利回り", "value": "4.28%", "direction": null },
+             { "label": "NY金先物", "value": "▲0.6%", "direction": "up" },
+             { "label": "WTI原油先物", "value": "▼0.9%", "direction": "down" }
+           ]
+         }
+         → ドル円/NYダウ/SOX/米金利は無料APIで、金・原油は無料枠つきAPIで
+           1日数回（例: 8:00 / 11:30 / 15:15）バッチ更新する運用を想定。
+           日経平均・TOPIXはライセンス制約があるため、このティッカーには含めない。
+
+      2) /data/headlines.json … ニュース速報バー用
+         例:
+         {
+           "updated_at": "2026-08-24T08:45:00+09:00",
+           "items": [
+             { "source": "日本経済新聞", "title": "…", "url": "https://..." },
+             { "source": "Bloomberg", "title": "…", "url": "https://..." },
+             { "source": "Reuters", "title": "…", "url": "https://..." }
+           ]
+         }
+         → 日経・Bloomberg・Reutersが公開しているRSS/ヘッドラインフィードを、
+           サーバー側（cron等の定期実行ジョブ）で取得し、タイトルとリンクだけを
+           抽出してこのJSONに書き出す運用を想定。本文は複製せず、見出し＋外部
+           リンクのみを扱う（クリックすると各社サイトの記事に遷移する）。
+
+      このHTML単体（フロントエンドのみ）ではRSS取得元のCORS制約や認証の関係で
+      直接フェッチできないことが多いため、上記2つのJSONを生成する小さな定期実行
+      ジョブ（サーバーレス関数 or cronスクリプト）を別途用意し、生成後のJSONだけ
+      をこのページが読みに行く構成が現実的です。
+    */
+
+    // データの取得先（tk-capital-dataリポジトリ内のJSONファイル）
+    const TICKER_URL = 'https://raw.githubusercontent.com/tkcapitalstock-creator/tk-capital-data-/main/ticker.json';
+    const HEADLINES_URL = 'https://raw.githubusercontent.com/tkcapitalstock-creator/tk-capital-data-/main/headlines.json';
+
+    async function loadTicker() {
+      try {
+        const res = await fetch(TICKER_URL, { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const track = document.getElementById('tickerTrack');
+        if (!track || !data.items) return;
+        const html = data.items.map(it => {
+          const cls = it.direction === 'up' ? 't-up' : it.direction === 'down' ? 't-down' : '';
+          return `<span>${it.label} <span class="${cls}">${it.value}</span></span>`;
+        }).join('');
+        track.innerHTML = html + html; // 2回連続でシームレスループ
+      } catch (e) {
+        // JSONがまだ用意されていない場合は、埋め込み済みのサンプル表示のまま
+      }
+    }
+
+    async function loadHeadlines() {
+      try {
+        const res = await fetch(HEADLINES_URL, { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const track = document.getElementById('newsTrack');
+        if (!track || !data.items) return;
+        const html = data.items.map(it =>
+          `<a href="${it.url}" target="_blank" rel="noopener"><span class="src">${it.source}</span>${it.title}</a>`
+        ).join('');
+        track.innerHTML = html + html;
+      } catch (e) {
+        // JSONがまだ用意されていない場合は、埋め込み済みのサンプル表示のまま
+      }
+    }
+
+    loadTicker();
+    loadHeadlines();
+    // ニュース速報は「開いたまま自動で切り替わる」ようにポーリングする。
+    // 間隔(ミリ秒)はここを変更するだけでOK。5秒 = 5000
+    // ※裏側のheadlines.json自体の更新頻度（cron側）より短くしても
+    //   見た目の更新頻度は上がらないので、cron側の間隔と合わせて調整推奨。
+    const NEWS_POLL_INTERVAL_MS = 5000;
+    setInterval(loadHeadlines, NEWS_POLL_INTERVAL_MS);
+
+    const revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      revealEls.forEach(el => io.observe(el));
+    } else {
+      revealEls.forEach(el => el.classList.add('in'));
+    }
+  </script>
+
+</body>
+</html>

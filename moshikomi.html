@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>会員申し込み｜TK Capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f4f2ec;
+    --paper: #ffffff;
+    --navy: #14213d;
+    --navy-soft: #1c2c4c;
+    --green: #3b6d11;
+    --green-soft: #5a9c2f;
+    --green-bg: #eaf3de;
+    --blue: #185fa5;
+    --blue-bg: #e6f1fb;
+    --muted: #78766a;
+    --line: #e3dfd2;
+    --ink: #1a1a1a;
+    --display: "Shippori Mincho", serif;
+    --body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+    --mono: "Roboto Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--body);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.85;
+  }
+  a { color: inherit; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  header.site {
+    background: var(--cream);
+    border-bottom: 1px solid var(--line);
+    padding: 16px 0;
+  }
+  header .container { display: flex; align-items: center; }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--navy);
+    text-decoration: none;
+  }
+  .brand small {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .back {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    margin-left: auto;
+  }
+
+  section { padding: 56px 0; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--green);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .hero { padding-top: 64px; text-align: center; }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(24px, 4vw, 32px);
+    color: var(--navy);
+    line-height: 1.7;
+    margin: 0 0 30px;
+  }
+  .problem-box {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 26px 30px;
+    text-align: left;
+    max-width: 480px;
+    margin: 0 auto 30px;
+  }
+  .problem-box p { font-size: 14px; color: var(--muted); margin: 0 0 12px; }
+  .problem-box ul { margin: 0; padding-left: 4px; list-style: none; }
+  .problem-box li {
+    font-size: 14.5px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .problem-box li:last-child { border-bottom: none; }
+  .hero .question {
+    font-size: 15px;
+    color: var(--navy-soft);
+    font-weight: 700;
+    line-height: 2;
+  }
+
+  .section-head { text-align: center; margin-bottom: 40px; }
+  .section-head h2 {
+    font-family: var(--display);
+    font-size: clamp(22px, 3.4vw, 28px);
+    color: var(--navy);
+    margin: 10px 0 0;
+    line-height: 1.6;
+  }
+
+  .daily-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 720px) { .daily-cards { grid-template-columns: 1fr; } }
+  .dcard {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px 20px;
+  }
+  .dcard .tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--green);
+    margin-bottom: 10px;
+  }
+  .dcard h3 {
+    font-family: var(--display);
+    font-size: 17px;
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+  .dcard p { font-size: 13.5px; color: #55534a; margin: 0; }
+
+  .extra-list {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  .extra-list p { margin: 8px 0; }
+
+  .weekly-box {
+    background: var(--navy);
+    color: #f1f0ea;
+    border-radius: 16px;
+    padding: 36px 32px;
+    text-align: center;
+  }
+  .weekly-box .pages {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #9db2d6;
+    margin-bottom: 10px;
+  }
+  .weekly-box h2 {
+    font-family: var(--display);
+    font-size: 24px;
+    margin: 0 0 18px;
+  }
+  .weekly-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px auto 0;
+    max-width: 380px;
+    text-align: left;
+  }
+  .weekly-box li {
+    font-size: 13.5px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.14);
+  }
+  .weekly-box li:last-child { border-bottom: none; }
+
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 720px) { .plans { grid-template-columns: 1fr; } }
+  .plan {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px 22px;
+    text-align: center;
+    position: relative;
+  }
+  .plan.best { border: 2px solid var(--green-soft); }
+  .plan .badge {
+    position: absolute;
+    top: -13px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--green-soft);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 4px 12px;
+    border-radius: 12px;
+  }
+  .plan h3 {
+    font-family: var(--display);
+    font-size: 17px;
+    margin: 10px 0 14px;
+    color: var(--navy);
+  }
+  .plan .price {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .plan .price small { font-size: 13px; font-weight: 500; }
+  .plan .monthly { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .campaign-note {
+    background: var(--green-bg);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: #27500a;
+    margin-top: 20px;
+  }
+  .plan-fine-print {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 14px;
+    line-height: 1.9;
+  }
+
+  .limited-box {
+    background: var(--blue-bg);
+    border-radius: 14px;
+    padding: 26px 30px;
+    text-align: center;
+  }
+  .limited-box h2 {
+    font-family: var(--display);
+    font-size: 19px;
+    color: var(--blue);
+    margin: 0 0 12px;
+  }
+  .limited-box p { font-size: 13.5px; color: #2a4a63; margin: 6px 0; }
+
+  form {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 36px 32px;
+  }
+  .field { margin-bottom: 22px; }
+  .field:last-of-type { margin-bottom: 0; }
+  label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  label .req { color: #c0392b; font-weight: 700; font-size: 11.5px; margin-left: 4px; }
+  label .opt { color: var(--muted); font-weight: 500; font-size: 11.5px; margin-left: 4px; }
+  input[type="text"], input[type="email"], select, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: var(--body);
+    font-size: 14px;
+    background: var(--cream);
+    color: var(--ink);
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--green-soft);
+    background: var(--paper);
+  }
+  textarea { resize: vertical; min-height: 90px; }
+  .submit-btn {
+    width: 100%;
+    margin-top: 30px;
+    padding: 15px;
+    border: none;
+    border-radius: 26px;
+    background: var(--green);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .submit-btn:hover { background: var(--green-soft); }
+  .note { font-size: 11.5px; color: var(--muted); margin-top: 14px; line-height: 1.8; }
+
+  footer { padding: 30px 0 40px; text-align: center; }
+  .disclaimer {
+    font-size: 11px;
+    color: #9a9888;
+    line-height: 1.9;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+  <header class="site">
+    <div class="container">
+      <a class="brand" href="index.html">TK Capital <small>MARKET&nbsp;RESEARCH</small></a>
+      <a class="back" href="index.html">← トップページに戻る</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="eyebrow">MEMBERSHIP APPLICATION</div>
+      <h1>今の日本株は、<br>「ただ銘柄を選ぶ」だけでは難しい。</h1>
+      <div class="problem-box">
+        <p>現在の日本株市場では、</p>
+        <ul>
+          <li>● テーマ株の高速ローテーション</li>
+          <li>● 為替・金利による急激な値動き</li>
+          <li>● 大口資金による断続的な売買</li>
+        </ul>
+      </div>
+      <p class="question">
+        こうした環境では、<br>
+        「結局、どの銘柄を見ればいいのか？」<br>
+        「今は買うべきなのか、待つべきなのか？」<br>
+        という判断が、これまで以上に難しくなっています。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">DAILY REPORT</div>
+        <h2>だからこそ、<br>「点」ではなく「線」で相場を見る。</h2>
+      </div>
+      <div class="daily-cards">
+        <div class="dcard">
+          <div class="tag">MORNING ／ 朝</div>
+          <h3>本日の相場見通し</h3>
+          <p>当日の相場環境と、投資戦略の軸を整理。</p>
+        </div>
+        <div class="dcard">
+          <div class="tag">MIDDAY ／ 昼</div>
+          <h3>前引け時点の市場分析</h3>
+          <p>前場の値動きから、資金の向かう先を確認。</p>
+        </div>
+        <div class="dcard">
+          <div class="tag">EVENING ／ 夕方</div>
+          <h3>当日の総括＋市場の裏側</h3>
+          <p>大口・ファンドの動向などを含め、翌日以降につながるポイントを整理。</p>
+        </div>
+      </div>
+      <div class="extra-list">
+        <p><strong>さらに、こんな情報も</strong></p>
+        <p>✓ CTA（商品投資顧問）やファンドなどの資金動向</p>
+        <p>✓ 市場関係者ベースのリアルタイムな情報</p>
+        <p>✓ 翌日〜数日で動意づく可能性のある銘柄</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="weekly-box">
+        <div class="pages">WEEKLY REPORT ／ 約20ページ</div>
+        <h2>毎週日曜日には、<br>「週間相場レポート」</h2>
+        <p style="font-size:13.5px; opacity:0.9; max-width:420px; margin:0 auto;">
+          目先の株価だけではなく、「なぜその動きになったのか」「次にどこへ資金が向かう可能性があるのか」まで整理します。
+        </p>
+        <ul>
+          <li>相場全体の方向性</li>
+          <li>注目テーマ・セクター</li>
+          <li>資金フローと今後の注目ポイント</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">MEMBERSHIP PLAN</div>
+        <h2>会員プラン</h2>
+      </div>
+      <div class="plans">
+        <div class="plan best">
+          <div class="badge">BEST VALUE</div>
+          <h3>年額コース</h3>
+          <div class="price">150,000<small>円</small></div>
+          <div class="monthly">月額換算：約12,500円</div>
+        </div>
+        <div class="plan">
+          <h3>半年コース</h3>
+          <div class="price">85,000<small>円</small></div>
+          <div class="monthly">月額換算：約14,167円</div>
+        </div>
+        <div class="plan">
+          <h3>月額コース</h3>
+          <div class="price">20,000<small>円</small></div>
+          <div class="monthly">&nbsp;</div>
+        </div>
+      </div>
+      <div class="campaign-note">
+        ★ お友達ご紹介キャンペーン実施中：ご紹介者様・ご新規様ともに、年間コースで25,000円引き（150,000円→125,000円）、半年コースで10,000円引き（85,000円→75,000円）。ぜひご活用ください。
+      </div>
+      <p class="plan-fine-print">
+        ※料金は税込表記です。<br>
+        ※各プランの詳細・お支払い方法については、お申込み時にご案内いたします。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="limited-box">
+        <h2>募集人数を限定しています</h2>
+        <p>TK Capitalでは、情報の品質と会員様への対応を維持するため、募集人数を限定して運営しております。</p>
+        <p>定員に達し次第、新規受付を一旦停止いたします。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">APPLICATION FORM</div>
+        <h2>ご興味をお持ちいただけましたら<br>まずはお気軽にお申し込みください</h2>
+      </div>
+
+      <form action="https://formsubmit.co/tkcapital.stock@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="【TK Capital】新規会員申し込み">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="thanks.html">
+
+        <div class="field">
+          <label for="name">お名前<span class="req">必須</span></label>
+          <input type="text" id="name" name="お名前" required>
+        </div>
+
+        <div class="field">
+          <label for="email">メールアドレス<span class="req">必須</span></label>
+          <input type="email" id="email" name="メールアドレス" required>
+        </div>
+
+        <div class="field">
+          <label for="plan">ご希望のプラン<span class="req">必須</span></label>
+          <select id="plan" name="ご希望のプラン" required>
+            <option value="">選択してください</option>
+            <option value="年額コース（150,000円）">年額コース（150,000円）</option>
+            <option value="半年コース（85,000円）">半年コース（85,000円）</option>
+            <option value="月額コース（20,000円）">月額コース（20,000円）</option>
+            <option value="まだ検討中">まだ検討中</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="referrer">ご紹介者様のお名前<span class="opt">任意・紹介キャンペーンご利用の場合</span></label>
+          <input type="text" id="referrer" name="ご紹介者様のお名前">
+        </div>
+
+        <div class="field">
+          <label for="message">ご要望・ご質問<span class="opt">任意</span></label>
+          <textarea id="message" name="ご要望・ご質問"></textarea>
+        </div>
+
+        <button class="submit-btn" type="submit">この内容で申し込む</button>
+
+        <p class="note">
+          送信内容は tkcapital.stock@gmail.com 宛にメールで届きます。<br>
+          ※初回のみ、FormSubmitからそのアドレス宛に届く確認メール内のリンクをクリックして有効化する必要があります。
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="disclaimer">
+      本サイトで提供する情報は情報提供を目的としたものであり、投資勧誘を目的としたものではありません。個別の投資判断はご自身の責任でお願いいたします。<br>
+      © TK Capital Market Research
+    </div>
+  </footer>
+
+</body>
+</html>
