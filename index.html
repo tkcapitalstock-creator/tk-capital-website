@@ -53,34 +53,31 @@
   .ticker-bar {
     background: var(--navy);
     color: #dfe6f2;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     white-space: nowrap;
     font-family: var(--mono);
     font-size: 12.5px;
     letter-spacing: 0.02em;
     border-bottom: 1px solid rgba(255,255,255,0.08);
+    cursor: grab;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
+  .ticker-bar::-webkit-scrollbar { display: none; }
+  .ticker-bar.dragging { cursor: grabbing; }
   .ticker-track {
     display: inline-block;
     padding: 9px 0;
-    animation: ticker 65s linear infinite;
   }
   .ticker-track span { padding: 0 26px; }
   .t-up { color: #8fd19e; }
   .t-down { color: #f2a396; }
-  @keyframes ticker {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ticker-track { animation: none; }
-  }
 
   /* ---------- News ticker ---------- */
   .news-bar {
     background: #0e1830;
     color: #cfd6e4;
-    overflow: hidden;
     white-space: nowrap;
     font-size: 12.5px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -97,11 +94,19 @@
     letter-spacing: 0.06em;
     padding: 9px 14px;
   }
-  .news-track-wrap { overflow: hidden; flex: 1 1 auto; }
+  .news-track-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex: 1 1 auto;
+    cursor: grab;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .news-track-wrap::-webkit-scrollbar { display: none; }
+  .news-track-wrap.dragging { cursor: grabbing; }
   .news-track {
     display: inline-block;
     padding: 9px 0;
-    animation: newsticker 55s linear infinite;
   }
   .news-track a {
     padding: 0 30px;
@@ -115,13 +120,6 @@
     font-size: 10.5px;
     color: #8ea0c4;
     margin-right: 8px;
-  }
-  @keyframes newsticker {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .news-track { animation: none; }
   }
 
   /* ---------- Header ---------- */
@@ -546,7 +544,7 @@
 </head>
 <body>
 
-  <div class="ticker-bar">
+  <div class="ticker-bar" id="tickerBar">
     <div class="ticker-track" id="tickerTrack">
       <span>ドル円 145.32</span>
       <span>NYダウ <span class="t-up">▲0.38%</span></span>
@@ -565,7 +563,7 @@
 
   <div class="news-bar">
     <div class="news-label">MARKET NEWS</div>
-    <div class="news-track-wrap">
+    <div class="news-track-wrap" id="newsTrackWrap">
       <div class="news-track" id="newsTrack">
         <a href="#" target="_blank" rel="noopener"><span class="src">日本経済新聞</span>日銀、次回会合での追加利上げ観測が浮上</a>
         <a href="#" target="_blank" rel="noopener"><span class="src">Bloomberg</span>半導体関連株、AI需要拡大観測で上昇</a>
@@ -810,6 +808,77 @@
     //   見た目の更新頻度は上がらないので、cron側の間隔と合わせて調整推奨。
     const NEWS_POLL_INTERVAL_MS = 5000;
     setInterval(loadHeadlines, NEWS_POLL_INTERVAL_MS);
+
+    // マウス/指でつかんでスライドできる横スクロール＋自動流れ
+    function enableDragScroll(container, durationSeconds) {
+      if (!container) return;
+      let isDown = false;
+      let autoScroll = true;
+      let startX = 0;
+      let scrollLeftStart = 0;
+      let resumeTimer = null;
+
+      function pauseAuto() {
+        autoScroll = false;
+        if (resumeTimer) clearTimeout(resumeTimer);
+      }
+      function resumeAutoSoon() {
+        if (resumeTimer) clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(() => { autoScroll = true; }, 1800);
+      }
+
+      container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        pauseAuto();
+        container.classList.add('dragging');
+        startX = e.pageX;
+        scrollLeftStart = container.scrollLeft;
+      });
+      window.addEventListener('mouseup', () => {
+        if (!isDown) return;
+        isDown = false;
+        container.classList.remove('dragging');
+        resumeAutoSoon();
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const walk = e.pageX - startX;
+        container.scrollLeft = scrollLeftStart - walk;
+      });
+
+      container.addEventListener('touchstart', (e) => {
+        isDown = true;
+        pauseAuto();
+        startX = e.touches[0].pageX;
+        scrollLeftStart = container.scrollLeft;
+      }, { passive: true });
+      container.addEventListener('touchend', () => {
+        isDown = false;
+        resumeAutoSoon();
+      });
+      container.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        const walk = e.touches[0].pageX - startX;
+        container.scrollLeft = scrollLeftStart - walk;
+      }, { passive: true });
+
+      function step() {
+        if (autoScroll && !isDown) {
+          const half = container.scrollWidth / 2 || 1;
+          const pxPerFrame = half / (durationSeconds * 60);
+          container.scrollLeft += pxPerFrame;
+          if (container.scrollLeft >= half) {
+            container.scrollLeft -= half;
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    enableDragScroll(document.getElementById('tickerBar'), 65);
+    enableDragScroll(document.getElementById('newsTrackWrap'), 55);
 
     const revealEls = document.querySelectorAll('.reveal');
     if ('IntersectionObserver' in window) {
