@@ -400,6 +400,32 @@
     margin: 0;
   }
 
+  /* ---------- Economic calendar ---------- */
+  .calendar-wrap {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 6px;
+    box-shadow: 0 16px 40px rgba(20,33,61,0.08);
+    overflow: hidden;
+  }
+  .calendar-wrap iframe {
+    width: 100%;
+    height: 560px;
+    border: 0;
+    display: block;
+  }
+  .calendar-credit {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+    padding: 8px 10px 2px;
+  }
+  .calendar-credit a { color: var(--blue); font-weight: 700; }
+  @media (max-width: 640px) {
+    .calendar-wrap iframe { height: 480px; }
+  }
+
   /* ---------- Deliverables (report timings) ---------- */
   .deliverables {
     background: var(--paper);
@@ -616,6 +642,7 @@
       <nav class="nav-links">
         <a href="#deliverables">配信レポート</a>
         <a href="#about">私たちについて</a>
+        <a href="#calendar">経済指標カレンダー</a>
         <a href="#reports">週次・銘柄レポート</a>
         <a href="#contact">お問い合わせ</a>
       </nav>
@@ -702,6 +729,21 @@
     </div>
   </section>
 
+  <section id="calendar">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>経済指標カレンダー</h2>
+        <p>その日・その週に発表される主要な経済指標や中央銀行イベントを一覧で確認できます。レポートを読む前のチェックにご活用ください。</p>
+      </div>
+      <div class="calendar-wrap reveal">
+        <iframe src="https://sslecal2.investing.com?ecoDayBackground=%23ffffff&defaultFont=%23222222&innerBorderColor=%23eeeeee&borderColor=%23ffffff&columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,timezone&countries=35,17,4,5,6,37,72,22,15,10,35&calType=week&timeZone=8&lang=1" title="経済指標カレンダー" loading="lazy"></iframe>
+        <div class="calendar-credit">
+          Real Time Economic Calendar provided by <a href="https://www.investing.com/" target="_blank" rel="noopener">Investing.com</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="reports">
     <div class="container">
       <div class="section-head reveal">
@@ -740,6 +782,7 @@
         <div class="footer-links">
           <a href="#deliverables">配信レポート</a>
           <a href="#about">私たちについて</a>
+          <a href="#calendar">経済指標カレンダー</a>
           <a href="#reports">週次・銘柄レポート</a>
           <a href="#contact">お問い合わせ</a>
         </div>
