@@ -307,18 +307,18 @@
   .btn-secondary { border: 1px solid rgba(255,255,255,0.5); color: #fff; background: rgba(255,255,255,0.06); backdrop-filter: blur(2px); }
   .btn-secondary:hover { border-color: #fff; background: rgba(255,255,255,0.14); }
 
-  /* Mini report card — now attached to the 大引けコラム card below */
-  .dcard.navy { position: relative; z-index: 0; }
+  /* Mini report card — floats in the blank space to the right of 大引けコラム */
+  .dcard.navy { position: relative; }
   .mini-report {
     position: absolute;
-    top: -30px;
-    right: -40px;
-    z-index: -1;
+    top: -22px;
+    right: -228px;
+    z-index: 5;
     background: var(--paper);
     border-radius: 14px;
-    padding: 20px 18px;
-    box-shadow: 0 20px 44px rgba(20,33,61,0.24);
-    width: 240px;
+    padding: 18px 16px;
+    box-shadow: 0 20px 44px rgba(20,33,61,0.18);
+    width: 208px;
     transform: rotate(3deg);
     border: 1px solid var(--line);
   }
@@ -326,9 +326,8 @@
     .mini-report {
       position: static;
       width: auto;
-      margin: 20px 0 0;
+      margin: 16px 0 0;
       transform: none;
-      z-index: auto;
     }
   }
   .mini-report .kicker {
