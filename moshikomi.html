@@ -26,6 +26,30 @@
     --mono: "Roboto Mono", monospace;
   }
   * { box-sizing: border-box; }
+
+  /* ---------- Watermark (スクロールしても常に画面中央に固定される透かしロゴ) ---------- */
+  .watermark {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .watermark span {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(64px, 11vw, 150px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(20,33,61,0.06);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  @media (max-width: 640px) {
+    .watermark { display: none; }
+  }
   body {
     margin: 0;
     font-family: var(--body);
@@ -358,6 +382,8 @@
 </style>
 </head>
 <body>
+
+  <div class="watermark"><span>TK CAPITAL</span></div>
 
   <header class="site">
     <div class="container">
