@@ -66,13 +66,9 @@
   }
   .ticker-bar::-webkit-scrollbar { display: none; }
   .ticker-bar.dragging { cursor: grabbing; }
-  .ticker-note {
-    background: var(--navy-soft);
-    color: #a9b6d1;
-    font-size: 10.5px;
-    text-align: center;
-    padding: 3px 12px;
-    letter-spacing: 0.01em;
+  .ticker-track .note {
+    color: #9fb0d0;
+    font-size: 11.5px;
   }
   .ticker-track {
     display: inline-block;
@@ -626,15 +622,16 @@
       <span>米10年債利回り 4.28%</span>
       <span>NY金先物 <span class="t-up">▲0.6%</span></span>
       <span>WTI原油先物 <span class="t-down">▼0.9%</span></span>
+      <span class="note">※表示にはディレイが生じている場合があります。最新の公式値は証券会社にてご確認ください</span>
       <span>ドル円 145.32</span>
       <span>NYダウ <span class="t-up">▲0.38%</span></span>
       <span>SOX指数 <span class="t-up">▲1.05%</span></span>
       <span>米10年債利回り 4.28%</span>
       <span>NY金先物 <span class="t-up">▲0.6%</span></span>
       <span>WTI原油先物 <span class="t-down">▼0.9%</span></span>
+      <span class="note">※表示にはディレイが生じている場合があります。最新の公式値は証券会社にてご確認ください</span>
     </div>
   </div>
-  <div class="ticker-note">※表示にはディレイが生じている場合があります。最新の公式値は証券会社にてご確認ください</div>
 
   <div class="news-bar">
     <div class="news-label">MARKET NEWS</div>
@@ -868,7 +865,7 @@
         const html = data.items.map(it => {
           const cls = it.direction === 'up' ? 't-up' : it.direction === 'down' ? 't-down' : '';
           return `<span>${it.label} <span class="${cls}">${it.value}</span></span>`;
-        }).join('');
+        }).join('') + '<span class="note">※表示にはディレイが生じている場合があります。最新の公式値は証券会社にてご確認ください</span>';
         track.innerHTML = html + html; // 2回連続でシームレスループ
       } catch (e) {
         // JSONがまだ用意されていない場合は、埋め込み済みのサンプル表示のまま
