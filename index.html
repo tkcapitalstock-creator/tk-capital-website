@@ -564,12 +564,32 @@
 
   /* ---------- CTA / contact ---------- */
   .cta-section {
+    position: relative;
+    overflow: hidden;
     background: var(--navy);
     color: #f1f0ea;
     border-radius: 22px;
     margin: 0 24px;
     padding: 60px 44px;
     text-align: center;
+    isolation: isolate;
+  }
+  .cta-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("images/cta-bg.jpg");
+    background-size: cover;
+    background-position: center 55%;
+    filter: saturate(0.9) contrast(1.03);
+    z-index: -2;
+  }
+  .cta-section::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15,24,44,0.86) 0%, rgba(15,24,44,0.80) 55%, rgba(15,24,44,0.90) 100%);
+    z-index: -1;
   }
   .cta-section h2 {
     font-family: var(--display);
