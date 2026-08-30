@@ -377,6 +377,37 @@
     background: var(--paper);
   }
   textarea { resize: vertical; min-height: 90px; }
+  .pay-method-options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .pay-method-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 160px;
+    margin-bottom: 0;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--cream);
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .pay-method-options input[type="radio"] {
+    width: auto;
+    accent-color: var(--green-soft);
+  }
+  .pay-method-options label:has(input:checked) {
+    border-color: var(--green-soft);
+    background: var(--green-bg);
+    font-weight: 700;
+    color: var(--navy);
+  }
   .submit-btn {
     width: 100%;
     margin-top: 30px;
@@ -537,7 +568,7 @@
       <div class="section-head">
         <div class="eyebrow">APPLICATION FORM</div>
         <h2>ご興味をお持ちいただけましたら<br>まずはお気軽にお申し込みください</h2>
-        <p style="margin-top:14px;">※カードでのお支払いは、上記の各プランの「カードでお申し込み」ボタンから直接お手続きいただけます。こちらのフォームは、ご相談・カード以外でのお支払いをご希望の方向けです。</p>
+        <p style="margin-top:14px;">※カードでのお支払いは、上記の各プランの「カードでお申し込み」ボタンから直接お手続きいただくか、下記フォームで「お支払い方法：カード決済」を選んで送信していただくと、決済ページが自動で開きます。銀行振込やご相談のみの方も、下記フォームからお気軽にどうぞ。</p>
       </div>
 
       <form action="https://formsubmit.co/tkcapital.stock@gmail.com" method="POST">
@@ -560,11 +591,20 @@
           <label for="plan">ご希望のプラン<span class="req">必須</span></label>
           <select id="plan" name="ご希望のプラン" required>
             <option value="">選択してください</option>
-            <option value="年額コース（150,000円）">年額コース（150,000円）</option>
-            <option value="半年コース（85,000円）">半年コース（85,000円）</option>
-            <option value="月額コース（20,000円）">月額コース（20,000円）</option>
+            <option value="年額コース（150,000円）" data-stripe="https://buy.stripe.com/dRmfZi5HZeyj38XdtV9AA00">年額コース（150,000円）</option>
+            <option value="半年コース（85,000円）" data-stripe="https://buy.stripe.com/dRm8wQ3zR89V10P2Ph9AA01">半年コース（85,000円）</option>
+            <option value="月額コース・毎月自動支払い（20,000円/月）" data-stripe="https://buy.stripe.com/aFaaEY6M3fCncJxexZ9AA03">月額コース・毎月自動支払い（20,000円/月）</option>
+            <option value="月額コース・1ヶ月分のみ（20,000円）" data-stripe="https://buy.stripe.com/dRm9AUb2j1LxdNB0H99AA02">月額コース・1ヶ月分のみ（20,000円）</option>
             <option value="まだ検討中">まだ検討中</option>
           </select>
+        </div>
+
+        <div class="field">
+          <label>お支払い方法<span class="req">必須</span></label>
+          <div class="pay-method-options">
+            <label><input type="radio" name="お支払い方法" value="カード決済" required> カード決済</label>
+            <label><input type="radio" name="お支払い方法" value="銀行振込" required> 銀行振込</label>
+          </div>
         </div>
 
         <div class="field">
@@ -581,7 +621,8 @@
 
         <p class="note">
           送信内容は tkcapital.stock@gmail.com 宛にメールで届きます。<br>
-          ※初回のみ、FormSubmitからそのアドレス宛に届く確認メール内のリンクをクリックして有効化する必要があります。
+          ※初回のみ、FormSubmitからそのアドレス宛に届く確認メール内のリンクをクリックして有効化する必要があります。<br>
+          ※「カード決済」を選んで送信すると、選択したプランの決済ページが新しいタブで自動的に開きます（「まだ検討中」の場合は開きません）。
         </p>
       </form>
     </div>
@@ -593,6 +634,23 @@
       © TK Capital Market Research
     </div>
   </footer>
+
+  <script>
+    (function () {
+      var form = document.querySelector('form[action*="formsubmit.co"]');
+      if (!form) return;
+      form.addEventListener('submit', function () {
+        var payMethod = form.querySelector('input[name="お支払い方法"]:checked');
+        var planSelect = document.getElementById('plan');
+        if (!payMethod || payMethod.value !== 'カード決済' || !planSelect) return;
+        var selectedOption = planSelect.options[planSelect.selectedIndex];
+        var stripeUrl = selectedOption ? selectedOption.getAttribute('data-stripe') : null;
+        if (stripeUrl) {
+          window.open(stripeUrl, '_blank');
+        }
+      });
+    })();
+  </script>
 
 </body>
 </html>
