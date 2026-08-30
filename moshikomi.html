@@ -294,6 +294,27 @@
   }
   .plan .price small { font-size: 14px; font-weight: 500; }
   .plan .monthly { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .plan-pay-btn {
+    display: block;
+    margin-top: 18px;
+    padding: 11px 10px;
+    border-radius: 22px;
+    background: var(--navy);
+    color: #fff;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+  .plan-pay-btn:hover { background: var(--navy-soft); }
+  .plan.best .plan-pay-btn { background: var(--green-soft); }
+  .plan.best .plan-pay-btn:hover { background: var(--green); }
+  .plan-pay-btn.outline {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--navy);
+    margin-top: 8px;
+  }
+  .plan-pay-btn.outline:hover { border-color: var(--navy); background: var(--cream); }
   .campaign-note {
     background: var(--green-bg);
     border-radius: 12px;
@@ -474,24 +495,29 @@
           <h3>年額コース</h3>
           <div class="price">150,000<small>円</small></div>
           <div class="monthly">月額換算：約12,500円</div>
+          <a class="plan-pay-btn" href="https://buy.stripe.com/dRmfZi5HZeyj38XdtV9AA00" target="_blank" rel="noopener">カードでお申し込み</a>
         </div>
         <div class="plan">
           <h3>半年コース</h3>
           <div class="price">85,000<small>円</small></div>
           <div class="monthly">月額換算：約14,167円</div>
+          <a class="plan-pay-btn" href="https://buy.stripe.com/dRm8wQ3zR89V10P2Ph9AA01" target="_blank" rel="noopener">カードでお申し込み</a>
         </div>
         <div class="plan">
           <h3>月額コース</h3>
           <div class="price">20,000<small>円</small></div>
           <div class="monthly">&nbsp;</div>
+          <a class="plan-pay-btn" href="https://buy.stripe.com/aFaaEY6M3fCncJxexZ9AA03" target="_blank" rel="noopener">毎月自動支払い（サブスク）</a>
+          <a class="plan-pay-btn outline" href="https://buy.stripe.com/dRm9AUb2j1LxdNB0H99AA02" target="_blank" rel="noopener">1ヶ月分だけ支払う</a>
         </div>
       </div>
       <div class="campaign-note">
-        ★ お友達ご紹介キャンペーン実施中：ご紹介者様・ご新規様ともに、年間コースで25,000円引き（150,000円→125,000円）、半年コースで10,000円引き（85,000円→75,000円）。ぜひご活用ください。
+        ★ お友達ご紹介キャンペーン実施中：ご紹介者様・ご新規様ともに、年間コースで25,000円引き（150,000円→125,000円）、半年コースで10,000円引き（85,000円→75,000円）。ぜひご活用ください。決済画面の「プロモーションコードを追加」欄に、ご紹介コードをご入力ください。
       </div>
       <p class="plan-fine-print">
         ※料金は税込表記です。<br>
-        ※各プランの詳細・お支払い方法については、お申込み時にご案内いたします。
+        ※「カードでお申し込み」ボタンからは、Stripe社の安全な決済ページに移動します。<br>
+        ※お支払い方法についてご不明点がある場合や、カード決済以外をご希望の場合は、下記フォームよりお問い合わせください。
       </p>
     </div>
   </section>
@@ -511,6 +537,7 @@
       <div class="section-head">
         <div class="eyebrow">APPLICATION FORM</div>
         <h2>ご興味をお持ちいただけましたら<br>まずはお気軽にお申し込みください</h2>
+        <p style="margin-top:14px;">※カードでのお支払いは、上記の各プランの「カードでお申し込み」ボタンから直接お手続きいただけます。こちらのフォームは、ご相談・カード以外でのお支払いをご希望の方向けです。</p>
       </div>
 
       <form action="https://formsubmit.co/tkcapital.stock@gmail.com" method="POST">
