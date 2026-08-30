@@ -625,7 +625,7 @@
         <p class="note">
           送信内容は tkcapital.stock@gmail.com 宛にメールで届きます。<br>
           ※初回のみ、FormSubmitからそのアドレス宛に届く確認メール内のリンクをクリックして有効化する必要があります。<br>
-          ※「カード決済」を選んで送信すると、選択したプランの決済ページが新しいタブで自動的に開きます（「まだ検討中」の場合は開きません）。<br>
+          ※「カード決済」または「銀行振込」を選んで送信すると、選択したプランの決済ページが新しいタブで自動的に開きます（決済ページ内でカード・銀行振込のどちらを使うかを選べます）。「まだ決めていない・お問い合わせのみ」の場合は開きません。<br>
           ※送信後、ご入力いただいたメールアドレス宛に自動返信メールが届きます。
         </p>
       </form>
@@ -651,7 +651,8 @@
         }
         var payMethod = form.querySelector('input[name="お支払い方法"]:checked');
         var planSelect = document.getElementById('plan');
-        if (!payMethod || payMethod.value !== 'カード決済' || !planSelect) return;
+        var triggersRedirect = payMethod && (payMethod.value === 'カード決済' || payMethod.value === '銀行振込');
+        if (!triggersRedirect || !planSelect) return;
         var selectedOption = planSelect.options[planSelect.selectedIndex];
         var stripeUrl = selectedOption ? selectedOption.getAttribute('data-stripe') : null;
         if (stripeUrl) {
