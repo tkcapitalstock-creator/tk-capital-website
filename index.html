@@ -141,6 +141,11 @@
     justify-content: space-between;
     padding: 16px 0;
   }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
   .brand {
     display: flex;
     flex-direction: column;
@@ -704,12 +709,14 @@
         <a href="#reports">週次・銘柄レポート</a>
         <a href="#contact">お問い合わせ</a>
       </nav>
-      <form class="stock-search" action="https://finance.yahoo.co.jp/search/" method="GET" target="_blank">
-        <input type="text" name="query" placeholder="銘柄名・コードで検索" required>
-        <button type="submit">検索</button>
-      </form>
-      <a class="member-link" href="members.html">🔒 会員専用ページ</a>
-      <a class="nav-cta" href="#contact">配信について相談する</a>
+      <div class="nav-right">
+        <form class="stock-search" action="https://finance.yahoo.co.jp/search/" method="GET" target="_blank">
+          <input type="text" name="query" placeholder="銘柄名・コードで検索" required>
+          <button type="submit">検索</button>
+        </form>
+        <a class="member-link" href="members.html">🔒 会員専用ページ</a>
+        <a class="nav-cta" href="#contact">配信について相談する</a>
+      </div>
     </div>
   </header>
 
