@@ -98,8 +98,8 @@
     margin: 0 0 10px;
   }
   .gate-card p { font-size: 13.5px; color: var(--muted); margin: 0 0 22px; }
-  .gate-card input[type="password"],
-  .gate-card input[type="text"].pw-visible {
+  .pw-field { position: relative; margin-bottom: 14px; }
+  .pw-field input {
     width: 100%;
     padding: 12px 44px 12px 14px;
     border: 1px solid var(--line);
@@ -107,8 +107,9 @@
     font-size: 15px;
     font-family: var(--body);
   }
+  .pw-field input::-ms-reveal,
+  .pw-field input::-ms-clear { display: none; }
   .gate-card input:focus { outline: 2px solid var(--green-soft); border-color: transparent; }
-  .pw-field { position: relative; margin-bottom: 14px; }
   .gate-card button.pw-toggle {
     position: absolute;
     right: 10px;
