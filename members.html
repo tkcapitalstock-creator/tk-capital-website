@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>会員専用ページ｜TK Capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f4f2ec;
+    --paper: #ffffff;
+    --navy: #14213d;
+    --navy-soft: #1c2c4c;
+    --green: #3b6d11;
+    --green-soft: #5a9c2f;
+    --green-bg: #eaf3de;
+    --blue: #185fa5;
+    --blue-bg: #e6f1fb;
+    --red: #c0392b;
+    --red-bg: #fbe4e1;
+    --muted: #78766a;
+    --line: #e3dfd2;
+    --ink: #1a1a1a;
+    --display: "Shippori Mincho", serif;
+    --body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+    --mono: "Roboto Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--body);
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 15.5px;
+    line-height: 1.8;
+  }
+  a { color: inherit; }
+  .container { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+  header.site {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+  header.site .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--navy);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+  .brand small {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+  }
+  .back { font-size: 13px; color: var(--navy-soft); text-decoration: none; font-weight: 500; }
+  .back:hover { text-decoration: underline; }
+
+  /* ---------- Gate (パスワード入力画面) ---------- */
+  #gate {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+  .gate-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 40px 36px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 16px 40px rgba(20,33,61,0.08);
+  }
+  .gate-card .icon { font-size: 28px; margin-bottom: 10px; }
+  .gate-card h1 {
+    font-family: var(--display);
+    font-size: 20px;
+    color: var(--navy);
+    margin: 0 0 10px;
+  }
+  .gate-card p { font-size: 13.5px; color: var(--muted); margin: 0 0 22px; }
+  .gate-card input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 14px;
+    font-family: var(--body);
+  }
+  .gate-card input[type="password"]:focus { outline: 2px solid var(--green-soft); border-color: transparent; }
+  .gate-card button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 24px;
+    background: var(--navy);
+    color: #fff;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .gate-card button:hover { background: var(--navy-soft); }
+  .gate-error {
+    color: var(--red);
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+  .gate-card .hint {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ---------- Members content ---------- */
+  #content { display: none; }
+  section { padding: 40px 0; }
+  .section-head { margin-bottom: 24px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .section-head h2 {
+    font-family: var(--display);
+    font-size: 22px;
+    color: var(--navy);
+    margin: 0;
+  }
+
+  .alert-banner {
+    display: none;
+    background: var(--red-bg);
+    border: 1px solid rgba(192,57,43,0.25);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 24px 0;
+    color: #7a2419;
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.7;
+  }
+  .alert-banner .tag {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  .weekly-card {
+    background: var(--navy);
+    color: #f1f0ea;
+    border-radius: 14px;
+    padding: 26px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .weekly-card .info h3 { font-family: var(--display); font-size: 17px; margin: 0 0 6px; }
+  .weekly-card .info p { font-size: 12.5px; color: #b9c4dc; margin: 0; }
+  .weekly-card a.dl-btn {
+    background: var(--green-soft);
+    color: #fff;
+    text-decoration: none;
+    padding: 11px 22px;
+    border-radius: 22px;
+    font-size: 13.5px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .weekly-card a.dl-btn:hover { background: var(--green); }
+  .empty-note {
+    font-size: 13.5px;
+    color: var(--muted);
+    background: var(--paper);
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+
+  .daily-list { display: flex; flex-direction: column; gap: 12px; }
+  .daily-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .daily-item:hover { border-color: var(--navy); }
+  .daily-item .thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--cream);
+    border: 1px solid var(--line);
+  }
+  .daily-item .meta { flex: 1; min-width: 0; }
+  .daily-item .date { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+  .daily-item .title { font-size: 14.5px; font-weight: 600; }
+  .daily-item .arrow { color: var(--muted); font-size: 18px; }
+
+  footer { padding: 30px 0 40px; text-align: center; }
+  .disclaimer { font-size: 11px; color: var(--muted); line-height: 1.8; }
+
+  /* ---------- Lightbox for image reports ---------- */
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,24,44,0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    cursor: zoom-out;
+  }
+  #lightbox img { max-width: 100%; max-height: 100%; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+  <header class="site">
+    <div class="container">
+      <a class="brand" href="index.html"><span>TK</span><span>Capital</span><small>MARKET&nbsp;RESEARCH</small></a>
+      <a class="back" href="index.html">← トップページに戻る</a>
+    </div>
+  </header>
+
+  <!-- パスワード入力画面 -->
+  <div id="gate">
+    <div class="gate-card">
+      <div class="icon">🔒</div>
+      <h1>会員専用ページ</h1>
+      <p>ご登録会員様専用のページです。<br>お知らせしているパスワードを入力してください。</p>
+      <input type="password" id="pw" placeholder="パスワード" autocomplete="off">
+      <button id="pwSubmit">ログイン</button>
+      <div class="gate-error" id="pwError">パスワードが違うようです。もう一度お試しください。</div>
+      <div class="hint">パスワードが分からない場合は、お問い合わせフォームよりご連絡ください。</div>
+    </div>
+  </div>
+
+  <!-- 会員コンテンツ -->
+  <div id="content">
+    <section id="alert-section">
+      <div class="container">
+        <div class="alert-banner" id="alertBanner">
+          <div class="tag">お知らせ</div>
+          <div id="alertMessage"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">WEEKLY REPORT</div>
+          <h2>週間相場見通し</h2>
+        </div>
+        <div id="weeklyArea"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">DAILY COLUMN</div>
+          <h2>日々のレポート</h2>
+        </div>
+        <div class="daily-list" id="dailyList"></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="disclaimer">
+          本サイトで提供する情報は情報提供を目的としたものであり、投資勧誘を目的としたものではありません。個別の投資判断はご自身の責任でお願いいたします。<br>
+          © TK Capital Market Research
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <div id="lightbox"><img id="lightboxImg" src="" alt=""></div>
+
+  <script>
+    (function () {
+      // ▼▼▼ パスワードはここだけ書き換えれば変更できます ▼▼▼
+      var MEMBER_PASSWORD = "TKC-Stock";
+      // ▲▲▲ ここまで ▲▲▲
+
+      var SESSION_KEY = "tkc_member_unlocked";
+      var REPORTS_URL = "https://raw.githubusercontent.com/tkcapitalstock-creator/tk-capital-data-/main/members/reports.json";
+      var ALERT_URL = "https://raw.githubusercontent.com/tkcapitalstock-creator/tk-capital-data-/main/members/alert.json";
+
+      var gate = document.getElementById("gate");
+      var content = document.getElementById("content");
+      var pwInput = document.getElementById("pw");
+      var pwError = document.getElementById("pwError");
+
+      function unlock() {
+        gate.style.display = "none";
+        content.style.display = "block";
+        loadAlert();
+        loadReports();
+      }
+
+      function tryLogin() {
+        if (pwInput.value === MEMBER_PASSWORD) {
+          sessionStorage.setItem(SESSION_KEY, "1");
+          unlock();
+        } else {
+          pwError.style.display = "block";
+        }
+      }
+
+      document.getElementById("pwSubmit").addEventListener("click", tryLogin);
+      pwInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") tryLogin();
+      });
+
+      if (sessionStorage.getItem(SESSION_KEY) === "1") {
+        unlock();
+      }
+
+      function loadAlert() {
+        fetch(ALERT_URL, { cache: "no-store" })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data && data.active && data.message) {
+              document.getElementById("alertMessage").textContent = data.message;
+              document.getElementById("alertBanner").style.display = "block";
+            }
+          })
+          .catch(function () {});
+      }
+
+      function loadReports() {
+        fetch(REPORTS_URL, { cache: "no-store" })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            renderWeekly(data.weekly_pdf);
+            renderDaily(data.daily || []);
+          })
+          .catch(function () {
+            document.getElementById("weeklyArea").innerHTML = '<div class="empty-note">レポートの読み込みに失敗しました。時間をおいて再度お試しください。</div>';
+            document.getElementById("dailyList").innerHTML = '<div class="empty-note">レポートの読み込みに失敗しました。時間をおいて再度お試しください。</div>';
+          });
+      }
+
+      function renderWeekly(w) {
+        var area = document.getElementById("weeklyArea");
+        if (!w || !w.url) {
+          area.innerHTML = '<div class="empty-note">現在、公開中の週間相場見通しはありません。</div>';
+          return;
+        }
+        area.innerHTML =
+          '<div class="weekly-card">' +
+            '<div class="info"><h3>' + escapeHtml(w.title || "週間相場見通し") + '</h3>' +
+            '<p>' + escapeHtml(w.date || "") + ' 配信</p></div>' +
+            '<a class="dl-btn" href="' + w.url + '" target="_blank" rel="noopener">PDFを開く</a>' +
+          '</div>';
+      }
+
+      function renderDaily(items) {
+        var list = document.getElementById("dailyList");
+        if (!items.length) {
+          list.innerHTML = '<div class="empty-note">現在、公開中の日々のレポートはありません。</div>';
+          return;
+        }
+        var sorted = items.slice().sort(function (a, b) { return (b.date || "").localeCompare(a.date || ""); });
+        list.innerHTML = sorted.map(function (item) {
+          return (
+            '<a class="daily-item" href="javascript:void(0)" onclick="openLightbox(\'' + item.image_url + '\')">' +
+              '<img class="thumb" src="' + item.image_url + '" alt="">' +
+              '<div class="meta">' +
+                '<div class="date">' + escapeHtml(item.date || "") + '</div>' +
+                '<div class="title">' + escapeHtml(item.title || "") + '</div>' +
+              '</div>' +
+              '<div class="arrow">›</div>' +
+            '</a>'
+          );
+        }).join("");
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      window.openLightbox = function (url) {
+        document.getElementById("lightboxImg").src = url;
+        document.getElementById("lightbox").style.display = "flex";
+      };
+      document.getElementById("lightbox").addEventListener("click", function () {
+        this.style.display = "none";
+      });
+    })();
+  </script>
+
+</body>
+</html>
