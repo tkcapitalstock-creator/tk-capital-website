@@ -109,7 +109,7 @@
   }
   .gate-card input:focus { outline: 2px solid var(--green-soft); border-color: transparent; }
   .pw-field { position: relative; margin-bottom: 14px; }
-  .pw-toggle {
+  .gate-card button.pw-toggle {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -117,13 +117,14 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--navy-soft);
-    padding: 4px 6px;
     width: auto;
+    padding: 4px;
+    border-radius: 0;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
   }
-  .pw-toggle:hover { color: var(--navy); }
+  .gate-card button.pw-toggle:hover { background: none; color: var(--navy); }
   .gate-card button {
     width: 100%;
     padding: 12px;
@@ -287,7 +288,12 @@
       <p>ご登録会員様専用のページです。<br>お知らせしているパスワードを入力してください。</p>
       <div class="pw-field">
         <input type="password" id="pw" placeholder="パスワード" autocomplete="off">
-        <button type="button" class="pw-toggle" id="pwToggle">表示</button>
+        <button type="button" class="pw-toggle" id="pwToggle" aria-label="パスワードを表示">
+          <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
       </div>
       <button id="pwSubmit">ログイン</button>
       <div class="gate-error" id="pwError">パスワードが違うようです。もう一度お試しください。</div>
@@ -375,15 +381,18 @@
       });
 
       var pwToggle = document.getElementById("pwToggle");
+      var eyeIcon = document.getElementById("eyeIcon");
+      var EYE_OPEN = '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"></path><circle cx="12" cy="12" r="3"></circle>';
+      var EYE_CLOSED = '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.6 21.6 0 0 1 5.06-6.06M9.9 4.24A10.4 10.4 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-2.61 3.87M14.12 14.12a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
       pwToggle.addEventListener("click", function () {
         if (pwInput.type === "password") {
           pwInput.type = "text";
-          pwInput.classList.add("pw-visible");
-          pwToggle.textContent = "隠す";
+          eyeIcon.innerHTML = EYE_CLOSED;
+          pwToggle.setAttribute("aria-label", "パスワードを隠す");
         } else {
           pwInput.type = "password";
-          pwInput.classList.remove("pw-visible");
-          pwToggle.textContent = "表示";
+          eyeIcon.innerHTML = EYE_OPEN;
+          pwToggle.setAttribute("aria-label", "パスワードを表示");
         }
       });
 
