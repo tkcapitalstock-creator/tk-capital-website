@@ -190,6 +190,17 @@
     text-decoration: none;
     white-space: nowrap;
   }
+  .member-link {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--navy-soft);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .member-link:hover { color: var(--navy); }
+  @media (max-width: 860px) {
+    .member-link { display: none; }
+  }
   .stock-search {
     display: flex;
     align-items: center;
@@ -697,6 +708,7 @@
         <input type="text" name="query" placeholder="銘柄名・コードで検索" required>
         <button type="submit">検索</button>
       </form>
+      <a class="member-link" href="members.html">🔒 会員専用ページ</a>
       <a class="nav-cta" href="#contact">配信について相談する</a>
     </div>
   </header>
@@ -834,6 +846,7 @@
           <a href="#calendar">経済指標カレンダー</a>
           <a href="#reports">週次・銘柄レポート</a>
           <a href="#contact">お問い合わせ</a>
+          <a href="members.html">会員専用ページ</a>
         </div>
       </div>
       <div class="disclaimer">
