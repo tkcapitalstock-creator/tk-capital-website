@@ -98,16 +98,32 @@
     margin: 0 0 10px;
   }
   .gate-card p { font-size: 13.5px; color: var(--muted); margin: 0 0 22px; }
-  .gate-card input[type="password"] {
+  .gate-card input[type="password"],
+  .gate-card input[type="text"].pw-visible {
     width: 100%;
-    padding: 12px 14px;
+    padding: 12px 44px 12px 14px;
     border: 1px solid var(--line);
     border-radius: 8px;
     font-size: 15px;
-    margin-bottom: 14px;
     font-family: var(--body);
   }
-  .gate-card input[type="password"]:focus { outline: 2px solid var(--green-soft); border-color: transparent; }
+  .gate-card input:focus { outline: 2px solid var(--green-soft); border-color: transparent; }
+  .pw-field { position: relative; margin-bottom: 14px; }
+  .pw-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--navy-soft);
+    padding: 4px 6px;
+    width: auto;
+  }
+  .pw-toggle:hover { color: var(--navy); }
   .gate-card button {
     width: 100%;
     padding: 12px;
@@ -269,7 +285,10 @@
       <div class="icon">🔒</div>
       <h1>会員専用ページ</h1>
       <p>ご登録会員様専用のページです。<br>お知らせしているパスワードを入力してください。</p>
-      <input type="password" id="pw" placeholder="パスワード" autocomplete="off">
+      <div class="pw-field">
+        <input type="password" id="pw" placeholder="パスワード" autocomplete="off">
+        <button type="button" class="pw-toggle" id="pwToggle">表示</button>
+      </div>
       <button id="pwSubmit">ログイン</button>
       <div class="gate-error" id="pwError">パスワードが違うようです。もう一度お試しください。</div>
       <div class="hint">パスワードが分からない場合は、お問い合わせフォームよりご連絡ください。</div>
@@ -353,6 +372,19 @@
       document.getElementById("pwSubmit").addEventListener("click", tryLogin);
       pwInput.addEventListener("keydown", function (e) {
         if (e.key === "Enter") tryLogin();
+      });
+
+      var pwToggle = document.getElementById("pwToggle");
+      pwToggle.addEventListener("click", function () {
+        if (pwInput.type === "password") {
+          pwInput.type = "text";
+          pwInput.classList.add("pw-visible");
+          pwToggle.textContent = "隠す";
+        } else {
+          pwInput.type = "password";
+          pwInput.classList.remove("pw-visible");
+          pwToggle.textContent = "表示";
+        }
       });
 
       if (sessionStorage.getItem(SESSION_KEY) === "1") {
