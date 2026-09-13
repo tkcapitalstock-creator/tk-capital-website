@@ -515,6 +515,63 @@
     text-align: right;
     padding: 8px 10px 2px;
   }
+
+  /* ---------- 適時開示 ---------- */
+  .disclosure-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 520px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .disclosure-item {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 13px 16px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .disclosure-item:hover { border-color: var(--navy); }
+  .disclosure-item .d-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: 92px;
+  }
+  .disclosure-item .d-code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--blue);
+    background: var(--blue-bg);
+    padding: 2px 7px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .disclosure-item .d-body { flex: 1; min-width: 0; }
+  .disclosure-item .d-name { font-size: 12.5px; color: var(--muted); margin-bottom: 2px; }
+  .disclosure-item .d-title { font-size: 14.5px; font-weight: 600; }
+  .empty-note {
+    font-size: 13.5px;
+    color: var(--muted);
+    background: var(--paper);
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  @media (max-width: 640px) {
+    .disclosure-item { flex-wrap: wrap; }
+    .disclosure-item .d-time { order: 1; }
+    .disclosure-item .d-code { order: 2; }
+    .disclosure-item .d-body { order: 3; width: 100%; }
+  }
   .calendar-credit a { color: var(--blue); font-weight: 700; }
   @media (max-width: 640px) {
     .calendar-frame-outer { height: 480px; }
@@ -760,6 +817,7 @@
         <a href="#deliverables">配信レポート</a>
         <a href="#about">私たちについて</a>
         <a href="#calendar">経済指標カレンダー</a>
+        <a href="#disclosures">適時開示</a>
         <a href="#reports">週次・銘柄レポート</a>
         <a href="#contact">お問い合わせ</a>
       </nav>
@@ -779,6 +837,7 @@
       <a href="#deliverables">配信レポート</a>
       <a href="#about">私たちについて</a>
       <a href="#calendar">経済指標カレンダー</a>
+      <a href="#disclosures">適時開示</a>
       <a href="#reports">週次・銘柄レポート</a>
       <a href="#contact">お問い合わせ</a>
       <a href="members.html">🔒 会員専用ページ</a>
@@ -898,6 +957,21 @@
     </div>
   </section>
 
+  <section id="disclosures">
+    <div class="container">
+      <div class="section-head reveal">
+        <h2>適時開示</h2>
+        <p>東京証券取引所に上場する企業の適時開示情報を、新しい順に自動で表示しています（5分ごとに更新）。</p>
+      </div>
+      <div class="disclosure-list reveal" id="disclosureList">
+        <div class="empty-note">読み込み中です…</div>
+      </div>
+      <div class="calendar-credit">
+        適時開示情報は<a href="https://webapi.yanoshin.jp/tdnet/" target="_blank" rel="noopener">TDnet WEB-API（非公式・by やのしん）</a>により取得しています
+      </div>
+    </div>
+  </section>
+
   <section id="reports">
     <div class="container">
       <div class="section-head reveal">
@@ -937,6 +1011,7 @@
           <a href="#deliverables">配信レポート</a>
           <a href="#about">私たちについて</a>
           <a href="#calendar">経済指標カレンダー</a>
+          <a href="#disclosures">適時開示</a>
           <a href="#reports">週次・銘柄レポート</a>
           <a href="#contact">お問い合わせ</a>
           <a href="members.html">会員専用ページ</a>
@@ -994,6 +1069,7 @@
     // データの取得先（tk-capital-dataリポジトリ内のJSONファイル）
     const TICKER_URL = 'https://raw.githubusercontent.com/tkcapitalstock-creator/tk-capital-data-/main/ticker.json';
     const HEADLINES_URL = 'https://raw.githubusercontent.com/tkcapitalstock-creator/tk-capital-data-/main/headlines.json';
+    const DISCLOSURES_URL = 'https://raw.githubusercontent.com/tkcapitalstock-creator/tk-capital-data-/main/disclosures.json';
 
     async function loadTicker() {
       try {
@@ -1028,8 +1104,50 @@
       }
     }
 
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function formatDisclosureTime(pubdate) {
+      // pubdate例: "Mon, 08 Sep 2026 15:30:00 +0900"
+      const d = new Date(pubdate);
+      if (isNaN(d.getTime())) return '';
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mi = String(d.getMinutes()).padStart(2, '0');
+      return `${mm}/${dd} ${hh}:${mi}`;
+    }
+
+    async function loadDisclosures() {
+      const list = document.getElementById('disclosureList');
+      if (!list) return;
+      try {
+        const res = await fetch(DISCLOSURES_URL, { cache: 'no-store' });
+        if (!res.ok) throw new Error('fetch failed');
+        const data = await res.json();
+        if (!data.items || !data.items.length) {
+          list.innerHTML = '<div class="empty-note">現在、表示できる適時開示情報がありません。</div>';
+          return;
+        }
+        list.innerHTML = data.items.map(it => `
+          <a class="disclosure-item" href="${it.url}" target="_blank" rel="noopener">
+            <span class="d-time">${formatDisclosureTime(it.pubdate)}</span>
+            <span class="d-code">${escapeHtml(it.code)}</span>
+            <span class="d-body">
+              <span class="d-name">${escapeHtml(it.name)}</span>
+              <span class="d-title">${escapeHtml(it.title)}</span>
+            </span>
+          </a>
+        `).join('');
+      } catch (e) {
+        list.innerHTML = '<div class="empty-note">適時開示情報の読み込みに失敗しました。時間をおいて再度お試しください。</div>';
+      }
+    }
+
     loadTicker();
     loadHeadlines();
+    loadDisclosures();
     // ニュース速報は「開いたまま自動で切り替わる」ようにポーリングする。
     // 間隔(ミリ秒)はここを変更するだけでOK。5秒 = 5000
     // ※裏側のheadlines.json自体の更新頻度（cron側）より短くしても
