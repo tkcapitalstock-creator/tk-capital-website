@@ -250,6 +250,59 @@
     .nav-links { display: none; }
   }
 
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 34px;
+    height: 34px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--navy);
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .mobile-menu.open { max-height: 420px; }
+  .mobile-menu a {
+    padding: 14px 24px;
+    text-decoration: none;
+    color: var(--navy-soft);
+    font-size: 14.5px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--line);
+  }
+  .mobile-menu a.mobile-cta {
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  @media (max-width: 720px) {
+    .hamburger { display: flex; }
+    .mobile-menu { display: flex; }
+    .nav-cta { display: none; }
+  }
+
   /* ---------- Hero ---------- */
   .hero {
     padding: 120px 0 100px;
@@ -717,8 +770,40 @@
         <a class="member-link" href="members.html">🔒 会員専用ページ</a>
         <a class="nav-cta" href="#contact">配信について相談する</a>
       </div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="メニューを開く" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+    <nav class="mobile-menu" id="mobileMenu">
+      <a href="#deliverables">配信レポート</a>
+      <a href="#about">私たちについて</a>
+      <a href="#calendar">経済指標カレンダー</a>
+      <a href="#reports">週次・銘柄レポート</a>
+      <a href="#contact">お問い合わせ</a>
+      <a href="members.html">🔒 会員専用ページ</a>
+      <a class="mobile-cta" href="#contact">配信について相談する</a>
+    </nav>
   </header>
+
+  <script>
+    (function () {
+      var btn = document.getElementById("hamburgerBtn");
+      var menu = document.getElementById("mobileMenu");
+      if (!btn || !menu) return;
+      btn.addEventListener("click", function () {
+        var isOpen = menu.classList.toggle("open");
+        btn.classList.toggle("open", isOpen);
+        btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+      menu.querySelectorAll("a").forEach(function (a) {
+        a.addEventListener("click", function () {
+          menu.classList.remove("open");
+          btn.classList.remove("open");
+          btn.setAttribute("aria-expanded", "false");
+        });
+      });
+    })();
+  </script>
 
   <section class="hero">
     <div class="container">
