@@ -517,6 +517,17 @@
   }
 
   /* ---------- 適時開示 ---------- */
+  .disclosure-search { margin-bottom: 16px; }
+  .disclosure-search input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    font-size: 14.5px;
+    font-family: var(--body);
+    background: var(--paper);
+  }
+  .disclosure-search input:focus { outline: 2px solid var(--green-soft); border-color: transparent; }
   .disclosure-list {
     display: flex;
     flex-direction: column;
@@ -961,7 +972,10 @@
     <div class="container">
       <div class="section-head reveal">
         <h2>適時開示</h2>
-        <p>東京証券取引所に上場する企業の適時開示情報を、新しい順に自動で表示しています（5分ごとに更新）。</p>
+        <p>東京証券取引所に上場する企業の適時開示情報を、本日分すべて新しい順に表示しています（5分ごとに更新）。</p>
+      </div>
+      <div class="disclosure-search reveal">
+        <input type="text" id="disclosureSearch" placeholder="銘柄名・証券コードで本日分を絞り込み">
       </div>
       <div class="disclosure-list reveal" id="disclosureList">
         <div class="empty-note">読み込み中です…</div>
@@ -1119,6 +1133,27 @@
       return `${mm}/${dd} ${hh}:${mi}`;
     }
 
+    let allDisclosures = [];
+
+    function renderDisclosures(items) {
+      const list = document.getElementById('disclosureList');
+      if (!list) return;
+      if (!items.length) {
+        list.innerHTML = '<div class="empty-note">該当する適時開示情報が見つかりませんでした。</div>';
+        return;
+      }
+      list.innerHTML = items.map(it => `
+        <a class="disclosure-item" href="${it.url}" target="_blank" rel="noopener">
+          <span class="d-time">${formatDisclosureTime(it.pubdate)}</span>
+          <span class="d-code">${escapeHtml(it.code)}</span>
+          <span class="d-body">
+            <span class="d-name">${escapeHtml(it.name)}</span>
+            <span class="d-title">${escapeHtml(it.title)}</span>
+          </span>
+        </a>
+      `).join('');
+    }
+
     async function loadDisclosures() {
       const list = document.getElementById('disclosureList');
       if (!list) return;
@@ -1126,23 +1161,31 @@
         const res = await fetch(DISCLOSURES_URL, { cache: 'no-store' });
         if (!res.ok) throw new Error('fetch failed');
         const data = await res.json();
-        if (!data.items || !data.items.length) {
+        allDisclosures = data.items || [];
+        if (!allDisclosures.length) {
           list.innerHTML = '<div class="empty-note">現在、表示できる適時開示情報がありません。</div>';
           return;
         }
-        list.innerHTML = data.items.map(it => `
-          <a class="disclosure-item" href="${it.url}" target="_blank" rel="noopener">
-            <span class="d-time">${formatDisclosureTime(it.pubdate)}</span>
-            <span class="d-code">${escapeHtml(it.code)}</span>
-            <span class="d-body">
-              <span class="d-name">${escapeHtml(it.name)}</span>
-              <span class="d-title">${escapeHtml(it.title)}</span>
-            </span>
-          </a>
-        `).join('');
+        renderDisclosures(allDisclosures);
       } catch (e) {
         list.innerHTML = '<div class="empty-note">適時開示情報の読み込みに失敗しました。時間をおいて再度お試しください。</div>';
       }
+    }
+
+    const disclosureSearchInput = document.getElementById('disclosureSearch');
+    if (disclosureSearchInput) {
+      disclosureSearchInput.addEventListener('input', () => {
+        const q = disclosureSearchInput.value.trim().toLowerCase();
+        if (!q) {
+          renderDisclosures(allDisclosures);
+          return;
+        }
+        const filtered = allDisclosures.filter(it =>
+          (it.name || '').toLowerCase().includes(q) ||
+          (it.code || '').toLowerCase().includes(q)
+        );
+        renderDisclosures(filtered);
+      });
     }
 
     loadTicker();
