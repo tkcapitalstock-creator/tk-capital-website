@@ -563,28 +563,11 @@
     font-weight: 600;
   }
   .disclosure-search-links a:hover { text-decoration: underline; }
-  #disclosureHistoryBtn {
-    padding: 8px 16px;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    background: var(--paper);
-    color: var(--navy-soft);
-    font-size: 12.5px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  #disclosureHistoryBtn:hover { border-color: var(--navy); color: var(--navy); }
-  #disclosureHistoryBtn:disabled { opacity: 0.4; cursor: not-allowed; }
   .disclosure-search-note {
     font-size: 12px;
     color: var(--muted);
     margin-top: 8px;
     min-height: 1em;
-  }
-  .disclosure-count {
-    font-size: 12.5px;
-    color: var(--muted);
-    margin-bottom: 10px;
   }
   .disclosure-list {
     display: flex;
@@ -1047,11 +1030,10 @@
       </div>
       <div class="disclosure-search reveal">
         <div class="disclosure-search-box">
-          <input type="text" id="disclosureSearch" placeholder="銘柄名・証券コードで本日分を絞り込み">
+          <input type="text" id="disclosureSearch" placeholder="銘柄名・4桁の証券コードで検索（コードなら過去分も別タブで開きます）">
           <button type="button" id="disclosureSearchBtn">検索</button>
         </div>
         <div class="disclosure-search-links">
-          <button type="button" id="disclosureHistoryBtn">過去の開示履歴を見る（別タブ）</button>
           <a href="https://kabutan.jp/disclosures/" target="_blank" rel="noopener">株探でもっと見る（適時開示・ニュースリリース）</a>
         </div>
         <div class="disclosure-search-note" id="disclosureSearchNote"></div>
@@ -1259,10 +1241,13 @@
 
     const disclosureSearchInput = document.getElementById('disclosureSearch');
     const disclosureSearchBtn = document.getElementById('disclosureSearchBtn');
+    const disclosureSearchNote = document.getElementById('disclosureSearchNote');
 
     function applyDisclosureFilter() {
-      const q = disclosureSearchInput.value.trim().toLowerCase();
+      const raw = disclosureSearchInput.value.trim();
+      const q = raw.toLowerCase();
       if (!q) {
+        disclosureSearchNote.textContent = '';
         renderDisclosures(allDisclosures);
         return;
       }
@@ -1271,10 +1256,30 @@
         (it.code || '').toLowerCase().includes(q)
       );
       renderDisclosures(filtered);
+
+      // 4桁の証券コードなら、本日分の絞り込みに加えて過去の開示履歴ページも開く
+      if (/^[0-9A-Za-z]{4}$/.test(raw)) {
+        disclosureSearchNote.textContent = `本日分を「${raw}」で絞り込みました。過去の開示履歴ページも新しいタブで開いています。`;
+        window.open(`https://webapi.yanoshin.jp/webapi/tdnet/list/${raw}.html`, '_blank', 'noopener');
+      } else {
+        disclosureSearchNote.textContent = '';
+      }
     }
 
     if (disclosureSearchInput) {
-      disclosureSearchInput.addEventListener('input', applyDisclosureFilter);
+      disclosureSearchInput.addEventListener('input', () => {
+        const q = disclosureSearchInput.value.trim().toLowerCase();
+        disclosureSearchNote.textContent = '';
+        if (!q) {
+          renderDisclosures(allDisclosures);
+          return;
+        }
+        const filtered = allDisclosures.filter(it =>
+          (it.name || '').toLowerCase().includes(q) ||
+          (it.code || '').toLowerCase().includes(q)
+        );
+        renderDisclosures(filtered);
+      });
       disclosureSearchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -1284,20 +1289,6 @@
     }
     if (disclosureSearchBtn) {
       disclosureSearchBtn.addEventListener('click', applyDisclosureFilter);
-    }
-
-    const disclosureHistoryBtn = document.getElementById('disclosureHistoryBtn');
-    const disclosureSearchNote = document.getElementById('disclosureSearchNote');
-    if (disclosureHistoryBtn) {
-      disclosureHistoryBtn.addEventListener('click', () => {
-        const q = disclosureSearchInput.value.trim();
-        if (!/^[0-9A-Za-z]{4}$/.test(q)) {
-          disclosureSearchNote.textContent = '4桁の証券コードを入力してから押してください（例：7203）';
-          return;
-        }
-        disclosureSearchNote.textContent = `証券コード「${q}」の過去の開示履歴ページを新しいタブで開きました。`;
-        window.open(`https://webapi.yanoshin.jp/webapi/tdnet/list/${q}.html`, '_blank', 'noopener');
-      });
     }
 
     loadTicker();
